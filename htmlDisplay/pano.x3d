@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive" version="3.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+    xsd:noNamespaceSchemaLocation="http://www.web3d.org/specifications/x3d-3.0.xsd">
+    <head>
+        <meta content="LodzPano.x3d" name="title"/>
+        <meta content="Panoramic sphere with clickable content" name="description"/>
+        <meta content="Adam Hochstetter - IU CyberDH" name="creators"/>
+        <meta content="29 Oct 2015" name="created"/>
+
+    </head>
+    <Scene>
+        <!-- ****** Duplicate values of Viewpoint and Navigation in html page 
+        for zoom purposes -->
+        <!-- Zoom is enabled in display page with javascript onclick="zoom(-0.15)" and pano.js -->
+        <!-- Starting view -->
+        <Viewpoint description='start' position='0 0 0' orientation="0 1 0 90"></Viewpoint>
+        <!-- Make able to only look around, up down at eye level and not move -->        
+        <NavigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0"></NavigationInfo>
+        <!-- **************-->
+        
+        <!-- Individual items These are used to set a glow and to link to a popup -->
+        <!-- overlay is a function in pano.js that generates an overlay with item info
+        it takes as an argument the omeka item number -->
+        <Shape onclick="overlay();">
+            <Appearance>
+                <!-- def is used in conjunction with timesensor to create the pulsing effect -->
+                <Material def="item171" transparency=".8" emissiveColor="1 0 0"/>
+            </Appearance>
+            <!-- coordinates are 1) bottom left 2) bottom right 3) top right 4) top left. -->
+            <IndexedFaceSet coordIndex="0 1 2 3 -1">
+                <Coordinate
+                    point="
+                    -7 .582975 1.65236                    
+                    -7 .6463976 1.26522
+                    -7 .909998 1.318002
+                    -7 .832906 1.71303                    
+                    "
+                />
+            </IndexedFaceSet>
+        </Shape>       
+    
+        
+<!-- This controls transparency of the item shapes. key is in seconds key value is for transparency -->
+        <ScalarInterpolator DEF="TransparencyAnimator" key="0 .2 .4 .6 .8 1"
+            keyValue=".25 .5 .75 .5 .25 .25"/>
+        <!-- To measure the passing of time it looks for 5 keys and repeats -->
+        <TimeSensor DEF="AnimationClock" cycleInterval="5" loop="true"/>
+        <ROUTE fromNode="AnimationClock" fromField="fraction_changed" toNode="TransparencyAnimator"
+            toField="set_fraction"/>
+        <!-- these link the interpolator to individual shapes -->
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="item171"
+            toField="transparency"/>
+    </Scene>
+</X3D>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive" version="3.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+    xsd:noNamespaceSchemaLocation="http://www.web3d.org/specifications/x3d-3.0.xsd">
+    <head>
+        <meta content="LodzPano.x3d" name="title"/>
+        <meta content="Panoramic sphere with clickable content" name="description"/>
+        <meta content="Adam Hochstetter - IU CyberDH" name="creators"/>
+        <meta content="29 Oct 2015" name="created"/>
+
+    </head>
+    <Scene>        
+        <!-- Starting view -->
+        <Viewpoint description='start' position='0 0 0' orientation="0 1 0 90"></Viewpoint>
+        <!-- pan: look up, down, left, right 
+             walk: look left, right
+             fly: look up, down
+             examine: look up, down, left, right and change the view angle
+             Pan is probably best for most applications
+             
+             Avatar size sets view at center of sphere.
+             Speed keeps view in place, not able to walk. If moving around the panorama is desired set it to something else
+             There could be a smaller, invisible sphere to limit movement in the sphere.
+        -->        
+        <NavigationInfo type="'pan' 'walk' 'fly' 'examine'" avatarSize="0.25 7.5 0.75" speed="0"></NavigationInfo>        
+        <!-- Panorama sphere -->
+        <Shape>
+            <Appearance>
+                <!-- Panorama image goes here 
+                The image used should be a mirror of the view desired
+                -->
+                <ImageTexture DEF="panoSphere" url="../image/panorama.jpg"/>
+            </Appearance>
+            <!-- hollow as view is from inside sphere -->
+            <Sphere solid="false" radius="7.5"/>
+        </Shape>
+        
+        <!-- Individual items These are used to set a pulsing glow -->
+        <Shape>
+            <Appearance>
+                <!-- def is used in conjunction with timesensor to create the pulsing effect -->
+                <Material DEF="item171" transparency=".8" emissiveColor="1 0 0"/>
+            </Appearance>
+            <!-- coordinates are 1) bottom left 2) bottom right 3) top right 4) top left. -->
+            <IndexedFaceSet coordIndex="0 1 2 3 -1">
+                <Coordinate
+                    point="
+                    -7 .582975 1.65236                    
+                    -7 .6463976 1.26522
+                    -7 .909998 1.318002
+                    -7 .832906 1.71303                    
+                    "
+                />
+            </IndexedFaceSet>
+        </Shape>
+        
+        <Shape>
+                <Appearance>
+                    <Material DEF="Item172" emissiveColor="1 0 0"/>
+                </Appearance>
+                <!-- Coords from lower right, lower left, upper left, upper right -->
+                <IndexedFaceSet coordIndex="0 1 2 3 -1">
+                    <Coordinate
+                        point="
+                        -7.1 .93268 1.3186 
+                        -7.3 .80608 .8916
+                        -7.2 1.1277 .79314
+                        -7.18 1.2343 1.2413
+                        "
+                    />
+                </IndexedFaceSet>
+            </Shape>      
+
+        <Shape>
+            <Appearance>
+                <Material DEF="item181" transparency=".4" emissiveColor="1 0 0"/>
+            </Appearance>
+            <IndexedFaceSet coordIndex="0 1 2 3 -1">
+                <Coordinate
+                    point="
+                    -7.2 1.34 .28006647                    
+                    -7.2 1.34 -.358219
+                    -7.2 1.868713 -.347311
+                    -7.2 1.89028 .28148155                    
+                    "
+                />
+            </IndexedFaceSet>
+        </Shape>
+        
+        <Shape>
+                <Appearance>
+                    <Material DEF="Item184" emissiveColor="1 0 0"/>
+                </Appearance>
+                <IndexedFaceSet coordIndex="0 1 2 3 -1">
+                    <Coordinate
+                        point="
+                        -7 1.5493 2.050                    
+                        -7.15 1.5559 1.0409
+                        -7 2.2325 1.0145
+                        -6.8 2.24378 1.984
+                        "
+                    />
+                </IndexedFaceSet>
+            </Shape>
+        
+<!-- This controls transparency of the item shapes. key is in seconds key value is for transparency -->
+        <ScalarInterpolator DEF="TransparencyAnimator" key="0 .2 .4 .6 .8 1"
+            keyValue=".25 .5 .75 .5 .25 .25"/>
+        <!-- To measure the passing of time it looks for 5 keys and repeats -->
+        <TimeSensor DEF="AnimationClock" cycleInterval="5" loop="true"/>
+        <ROUTE fromNode="AnimationClock" fromField="fraction_changed" toNode="TransparencyAnimator"
+            toField="set_fraction"/>
+        <!-- these link the interpolator to individual shapes -->
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="item171"
+            toField="transparency"/>        
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="Item172"
+            toField="transparency"/>
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="item181"
+            toField="transparency"/>        
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="Item184"
+            toField="transparency"/>
+    </Scene>
+</X3D>

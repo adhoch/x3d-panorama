@@ -1,0 +1,67 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>x3d Panorama</title>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://www.x3dom.org/download/x3dom.js"> </script>
+        <link rel="stylesheet" type="text/css" href="http://www.x3dom.org/download/x3dom.css" />
+        
+        <script type="text/javascript" src="pano.js"> </script>
+        <link href="pano.css"/>
+        </head>
+    <body>
+        <div id="pano">
+            <x3d id="x3dcontext" style="width:100%; height:5%;">
+                <scene>
+                    <!-- Need viewpoint and navigationWindow in main page for zoom function to work -->
+                    <viewpoint description="start" position="0 0 0" orientation="0 1 0 90"></viewpoint>
+                    <navigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0"
+                    ></navigationInfo>
+                    <!-- This gets the xyz coordinates of a click. Used to create clickable items by putting a semitransparent shape over them -->
+                    <Group
+                        onclick="document.getElementById('bar').setAttribute('translation', event.hitPnt);">
+                        <!-- *** Main panoramic sphere ***-->
+                        <!-- Prints the xyz coordinates of clicks to the console -->
+                        <Shape onclick="console.log(event.hitPnt);">
+                            <Appearance>
+                                <!--THERE IS AN UPPER LIMIT ON THE PIXEL DIMENSIONS MOST BROWSERS WILL DISPLAY not chrome-->
+                                <ImageTexture id="panosphere"
+                                    url="omeka-2.3.1/themes/seasons/images/pano_optimized12.jpg"
+                                ></ImageTexture>
+                            </Appearance>
+                            <!-- hollow as view is from inside sphere -->
+                            <sphere solid="false" radius="7.5"></sphere>
+                        </Shape>
+                    </Group>
+                    <inline url="pano.x3d"> </inline>
+                </scene>
+            </x3d>
+            <!-- zoom in and zoom out buttons as well as overlay -->
+            <div id="mainNav">
+                <input type="image" onclick="zoom(-0.15);"
+                    src="https://upload.wikimedia.org/wikipedia/commons/c/c1/GeoGebra_icon_cursor_zoom_in.gif" />
+                <input type="image" onclick="zoom(0.15)"
+                    src="https://upload.wikimedia.org/wikipedia/commons/8/83/GeoGebra_icon_cursor_zoom_out.gif"
+                 />
+            </div>
+            <!-- item click overlay. Each item in the x3d needs to identify it's item # by having the attribute "onclick='overlay(ITEM#);'" -->
+            <div id="overlay" style="display:none;">
+                <img onclick='jQuery("#overlay").toggle()' id="closeOverlay"
+                    src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-window-close-icon.png" />
+                <p id="overlayContent"> Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Praesent a libero mauris. Praesent faucibus blandit arcu non auctor. Nulla
+                    mattis risus lectus, ornare finibus ligula pellentesque in. Duis rutrum leo vel
+                    nisi ultrices, eget cursus lorem egestas. Nam commodo ante vel risus ultrices
+                    suscipit. Cras feugiat, odio non porta scelerisque, odio est accumsan massa, a
+                    lacinia eros dui id eros. Vestibulum sagittis et nisl non hendrerit. Aliquam nec
+                    tempor orci, sit amet tempus velit. Duis sed gravida mi. Duis dignissim, enim a
+                    lacinia sodales, purus elit sodales felis, accumsan mollis est elit et elit.
+                    Pellentesque vestibulum lorem magna, sit amet dapibus magna aliquet non. In
+                    maximus imperdiet libero eget lobortis. Donec sagittis laoreet mauris vitae
+                    tempor. Nunc id est ac tortor pulvinar tristique in non velit. Donec vehicula
+                    vitae diam vel fermentum. </p>
+            </div>
+        </div>
+    </body>
+</html>
