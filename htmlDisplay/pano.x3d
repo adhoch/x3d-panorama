@@ -25,7 +25,7 @@
         <Shape onclick="overlay();">
             <Appearance>
                 <!-- def is used in conjunction with timesensor to create the pulsing effect -->
-                <Material def="item171" transparency=".8" emissiveColor="1 0 0"/>
+                <Material DEF="item171" transparency=".8" emissiveColor="1 0 0"/>
             </Appearance>
             <!-- coordinates are 1) bottom left 2) bottom right 3) top right 4) top left. -->
             <IndexedFaceSet coordIndex="0 1 2 3 -1">
