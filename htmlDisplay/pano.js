@@ -42,6 +42,7 @@ function handleGroupClick(event) {
     b++;    
     //Mark hitting point    
     var coordinates = event.hitPnt;
+    // in current panorama need x needs to be slightly closer to the center to avoid being partially outside the sphere
     var x = ((coordinates[0]) + .05);
     var y = (coordinates[1]);
     var z = (coordinates[2]);
