@@ -1,0 +1,68 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>x3d Panorama</title>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="x3dom.js"> </script>
+        <link rel="stylesheet" type="text/css" href="x3dom.css" />
+
+        <script type="text/javascript" src="pano.js"> </script>
+        <link rel="stylesheet" type="text/css" href="pano.css" />
+    </head>
+    <body id="body">
+        <div id="pano">
+            <x3d id="x3dcontext" style="background:black; width:100%;" showLog="true"> 
+                <!-- Buttons and containers -->
+                <div id="butCont">
+                    <div id="navbuts">
+                        <button id="fullscreen" onclick="fullscreen(this);">Full
+                            Screen</button>
+                       <!-- Arguments in all movement buttons are distance for each click -->
+                        <button type="button" onclick="zoom(-0.15);">
+                            <img src="Images/zoom_in.gif" alt="zoom in"/>
+                        </button>
+                        <button type="button" onclick="zoom(0.15)">
+                            <img src="Images/zoom_out.gif" alt="zoom out"/>
+                        </button>
+                        <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-u" type="button"
+                            value="&uarr;" onclick="up(0.15);">&uarr;</button>
+                        <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-d" type="button"
+                            value="&darr;" onclick="down(0.15);">&darr;</button>
+                        <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-l" type="button"
+                            value="&larr;" onclick="left(0.15);">&larr;</button>
+                        <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-r" type="button"
+                            value="&rarr;" onclick="right(0.15);">&rarr;</button>
+                    </div>
+                </div>
+                <Scene>
+                    <!-- Need transform, viewpoint and navigationWindow in main page for buttons to work -->
+                <!-- ycamera used by buttons to control x rotation -->
+                    <Transform id="xcamera">
+                        <!-- ycamera used by buttons to control y rotation -->
+                        <Transform id="ycamera">
+                        <!-- Starting point, rotated to look at desire object -->
+                            <Viewpoint description="start" id="start" DEF="start" position="0 0 0"
+                                orientation="0 1 0 90"></Viewpoint>
+                        </Transform>
+                    </Transform>
+                    <!-- Viewpoint for entirely internal x3d item information -->
+                    <Viewpoint description="CrucifixBox" id="CrucifixBox" DEF="CrucifixBox"
+                        position="-10 -20 -0" fieldofview=".785398"></Viewpoint>
+                    <!-- Controls type of navigation, avatar size for collision purposes, speed of 0 means movement is only of camera, transitionTime=0 making jump between viewpoints instantanious -->
+                    <navigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0"
+                        transitionTime="0"></navigationInfo>
+                    <!-- Points to first pano -->
+                    <inline id="x3dFile" url="grunPano.x3d"> </inline> 
+                </Scene>
+            </x3d>
+            <!-- Creates to overlay div for items to go into -->
+            <div id="overlay" style="display:none;">
+                <!-- The close button on the overlay -->
+                <img onclick='jQuery("#overlay").toggle()' id="closeOverlay"
+                    src="Images/Actions-window-close-icon.png" alt="close" />
+                <!-- Where the image and text of the overlay go -->
+                <p id="overlayContent"></p>
+            </div>
+    </body>
+</html>

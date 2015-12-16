@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive" version="3.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+    xsd:noNamespaceSchemaLocation="http://www.web3d.org/specifications/x3d-3.0.xsd">
+    
+        <head>
+            <meta content="grunCentPano.x3d" name="title"/>
+            <meta
+                content="Panorama 2 of the Grunwlad Cabinet of Curiousities exhibit with examples of different types of clickable objects"
+                name="description"/>
+            <meta content="Adam Hochstetter" name="creator"/>
+            <meta content="2015 11 20" name="created"/>
+            <meta content="2015 12 16" name="modified"/>
+            <meta content="2.0" name="version"/>
+            <meta content="pano.css" name="requires"/>
+            <meta content="pano.js" name="requires"/>
+            <meta
+                content="*enter copyright information here* Example: Copyright (c) Web3D Consortium Inc. 2006 to present"
+                name="rights"/>
+            <meta content="pano_ad_11-18.jpg" name="Image"/>
+            <meta content="*enter permission statements or url here*" name="accessRights"/>
+            <meta content="javascript in x3d will not validate" name="warning"/>
+            <meta content="X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit" name="generator"/>
+            <meta content="../license.html" name="license"/>
+        </head>
+
+    
+    <Scene>
+        <!-- ****** Duplicate values of Viewpoint and Navigation in html page
+         needed there for button functionality, included here for completeness-->
+        <!-- Starting point, rotated to look at desire object -->
+        <Viewpoint description="start" position="0 0 0" orientation="0 1 0 90"/>
+        <!-- Viewpoint for entirely internal x3d item information -->
+        <Viewpoint description="CrucifixBox" DEF="CrucifixBox" position="-10 -20 -0"
+            fieldOfView=".785398"/>
+        <!-- Make able to only look around, up down at eye level and not move. Jumps between viewpoints are instantanious-->
+        <NavigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0" transitionTime="0"/>
+
+        <!-- Panorama Sphere -->
+        <Shape>
+            <Appearance>
+                <!--THERE IS AN UPPER LIMIT ON THE PIXEL DIMENSIONS MOST BROWSERS WILL DISPLAY (not chrome). 4096x4096. 16,777,216 pixels.
+                Sets the panoramic image.-->
+                <ImageTexture id="panosphere" url="Images/grunCentPano.jpg"/>
+            </Appearance>
+            <!-- Sphere is solid to view from inside. Displays a mirror version of the panoramic image.
+            Subdivision: Panorama sphere needs more than default faces to minimize distortion at the poles
+            Radius in meters. Should be a plausible room size-->
+            <Sphere subdivision="80,80" solid="false" radius="7.5"/>
+        </Shape>
+
+
+        <!-- ****** Anchor used in pure x3d version, if used in html the browser will download the x3d file ********-->
+        <!-- An indexed face set with an up arrow image used to toggle between Panoramas -->
+        <!--<Anchor url="grunCentPano.x3d">-->
+        <!-- Changes x3d file rendered in the html  -->
+        <Anchor url="grunPano.x3d">
+            <Shape id="navSphere"
+                onclick="document.getElementById('x3dFile').setAttribute('url','grunPano.x3d');">
+                <Appearance>
+                    <Material transparency=".1"/>
+                    <ImageTexture id="navText" url="Images/uparrowbutton.png"/>
+                </Appearance>
+                <IndexedFaceSet convex="false" coordIndex="' 0 1 2 3 0 -1'">
+                    <Coordinate
+                        point=" 7.47 -0.06 0.19 7.39 -0.06 0.66 7.36 0.55 0.66 7.41 0.55 0.19 0"/>
+                </IndexedFaceSet>
+            </Shape>
+        </Anchor>
+    </Scene>
+</X3D>

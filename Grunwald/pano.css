@@ -1,0 +1,72 @@
+#pano {
+    float:left!important;
+    width:100%!important;
+    padding:0!important;
+    border-style:none!important;
+    position:relative;!important;
+}
+#mainNav {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: transparent!important;
+}
+
+#mainNav input {
+    border-style:solid;
+}
+
+#overlay {
+    position: absolute;
+    left: 18.5%;
+    right: 18.5%;
+    background-color: black;
+    top: 2.5%;
+    opacity: .8;
+    
+}
+
+#closeOverlay {
+    position: absolute;
+    right: 0px;
+    height:2vw;
+}
+
+#overlay #overlayContent img {
+    display: inline-block;
+    float: left;
+    margin-right: 1vw;
+    margin-bottom:2vw;
+    margin-left:.5vw;
+    max-width:55%;
+    opacity:1;
+}
+
+
+#overlay p#overlayContent p, #overlay p#overlayContent a, p#overlayContent {
+        font-size:1.5vw;        
+        margin-right:3%;
+        margin-left:3%;
+        color:white;
+}
+
+#overlay #overlayContent h3 {
+    margin-right:2.2vw;
+}
+
+button{
+    height:3vw;
+    width:3vw;
+    float:left;
+    padding:0;
+    margin:0;
+}
+button img{
+    width:80%;
+}
+
+#butCont{
+    margin-left:25%;
+    position:absolute;
+    bottom:0;
+}

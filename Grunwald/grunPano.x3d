@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive" version="3.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+    xsd:noNamespaceSchemaLocation="http://www.web3d.org/specifications/x3d-3.0.xsd">
+    <head>
+        <meta content="grunPano.x3d" name="title"/>
+        <meta
+            content="Panorama 1 of the Grunwlad Cabinet of Curiousities exhibit with examples of different types of clickable objects"
+            name="description"/>
+        <meta content="Adam Hochstetter" name="creator"/>
+        <meta content="*2015 11 20" name="created"/>
+        <meta content="2015 12 16" name="modified"/>
+        <meta content="2.0" name="version"/>
+        <meta content="pano.css" name="requires"/>
+        <meta content="pano.js" name="requires"/>
+        <meta
+            content="*enter copyright information here* Example: Copyright (c) Web3D Consortium Inc. 2006 to present"
+            name="rights"/>
+        <meta content="pano_ad_11-18.jpg" name="Image"/>
+        <meta content="*enter permission statements or url here*" name="accessRights"/>
+        <meta content="javascript in x3d will not validate" name="warning"/>
+        <meta content="X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit" name="generator"/>
+        <meta content="../license.html" name="license"/>
+    </head>
+    <Scene>
+        <!-- ****** Duplicate values of Viewpoint and Navigation in html page
+         needed there for button functionality, included here for completeness-->
+        <!-- Starting point, rotated to look at desire object -->
+        <Viewpoint description="start" position="0 0 0" orientation="0 1 0 90"/>
+        <!-- Viewpoint for entirely internal x3d item information -->
+        <Viewpoint description="CrucifixBox" DEF="CrucifixBox" position="-10 -20 -0"
+            fieldOfView=".785398"/>
+        <!-- Make able to only look around, up down at eye level and not move. Jumps between viewpoints are instantanious-->
+        <NavigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0" transitionTime="0"/>
+
+        <!-- Panorama Sphere -->
+        <Shape>
+            <Appearance>
+                <!--THERE IS AN UPPER LIMIT ON THE PIXEL DIMENSIONS MOST BROWSERS WILL DISPLAY (not chrome). 4096x4096. 16,777,216 pixels.
+                Sets the panoramic image.-->
+                <ImageTexture id="panosphere" url="Images/pano_ad_11-18.jpg"/>
+            </Appearance>
+            <!-- Sphere is solid to view from inside. Displays a mirror version of the panoramic image.
+            Subdivision: Panorama sphere needs more than default faces to minimize distortion at the poles
+            Radius in meters. Should be a plausible room size-->
+            <Sphere subdivision="80,80" solid="false" radius="7.5"/>
+        </Shape>
+
+<!-- ****** Anchor used in pure x3d version, if used in html the browser will download the x3d file ********-->
+        <!-- An indexed face set with an up arrow image used to toggle between Panoramas -->
+        <!--<Anchor url="grunCentPano.x3d">-->
+        <!-- Changes x3d file rendered in the html  -->    
+        <Shape onclick="document.getElementById('x3dFile').setAttribute('url','grunCentPano.x3d');">
+                <Appearance>
+                    <Material transparency=".1"/>
+                    <ImageTexture id="navText" url="Images/uparrowbutton.png"/>
+                </Appearance>
+                <IndexedFaceSet convex="false" coordIndex=" 0 1 2 3 0 -1">
+                    <Coordinate
+                        point=" 1.97 -1.01 7.14 1.38 -1.01 7.22 1.38 -0.31 7.29 1.97 -0.31 7.21 0"/>
+                </IndexedFaceSet>
+            </Shape>
+        <!--</Anchor>-->
+        
+        
+        <!--********* Creates a pure x3d space to view highlighted items. Uses an image taken from a screenshot of
+        the object and desired text-->
+        <!-- Moves the area away from the sphere -->
+        <Transform translation="-10 -20 -20">
+            
+            <!-- This is a single picture node. To fully implement this feature This would need to either be a
+                seperate x3d file or the IntegerTrigger node must be implemented and used in conjunction with a switch-->
+            <Shape>
+                <Appearance>
+                    <!-- This is an individualized picture.  -->
+                    <ImageTexture url="Images/Crucifix.png"/>
+                </Appearance>
+                <Box size="22 16.5 .005"/>
+            </Shape>
+            <Transform translation="11 5 5">
+                <!-- Small x that return back to orginal viewpoint. In pure x3d this function would be performed by an anchor tag -->
+                <Shape onclick="document.getElementById('start').setAttribute('set_bind','true');">
+                    <Appearance>
+                        <ImageTexture url="Images/Actions-window-close-icon.png"/>
+                    </Appearance>
+                
+                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1">
+                        <Coordinate point="0 0 0 1 0 0 1 1 0 0 1 0"/>
+                    </IndexedFaceSet>
+                </Shape>
+            </Transform>
+        </Transform>
+
+        <!-- ********** Individual items These are used to set a glow and to link to a popup -->
+<!-- This is the box around the crucifix. It uses the seperate box node and image above to display text and a closer picture
+            of the item -->
+        <Shape onclick="document.getElementById('CrucifixBox').setAttribute('set_bind','true');">
+            <Appearance>
+                <!-- def is used in conjunction with timesensor to create the pulsing effect -->
+                <Material DEF="item171" transparency=".8" emissiveColor="1 0 0"/>
+            </Appearance>
+            <!-- coordinates are 1) bottom left 2) bottom right 3) top right 4) top left. -->
+            <IndexedFaceSet creaseAngle="3.14" convex="false" coordIndex=" 0 1 2 3 0 -1">
+                <Coordinate
+                    point="6.5881 -0.6012 3.3843 6.2917 -0.6356 3.9336 6.1828 0.8348 4.0513 6.5886 0.8533 3.3369"
+                />
+            </IndexedFaceSet>
+        </Shape>
+
+        
+        <!-- This is the bird. It uses a javascript function to create a pop over and display an image with the relevant text.
+        In this case the raw html is provided in the javascript. There is an omeka function that takes the item number and 
+        populates the popover with the item metadata-->
+        <Shape onclick="overlayBird();">
+            <Appearance>
+                <Material DEF="Item172" emissiveColor="1 0 0" transparency=".8"/>
+            </Appearance>
+            <!-- Coords from lower right, lower left, upper left, upper right -->
+            <IndexedFaceSet convex="false" coordIndex=" 0 1 2 3 0 -1">
+                <Coordinate
+                    point=" 5.07 -1.88 5.17 4.44 -1.96 5.63 4.51 -1.29 5.75 5.10 -1.28 5.30 .5"/>
+            </IndexedFaceSet>
+        </Shape>
+        
+        <!-- This is the braid of hair. It uses an anchor tag to open up a html page in a new window -->
+        <Anchor url="Braid.html">
+            <Shape>
+                <Appearance>
+                    <Material DEF="hairBraid" emissiveColor="1 0 0" transparency=".8"/>
+                </Appearance>
+                <IndexedFaceSet convex="false" coordIndex="0 1 2 3 0 -1">
+                    <Coordinate
+                        point=" -5.05 -1.77 5.1 -6.1 -1.95 3.8 -6 -1.72 3.84 -5.1 -1.53 5.10 0"/>
+                </IndexedFaceSet>
+            </Shape>
+        </Anchor>
+
+
+
+        <!-- This controls transparency of the item shapes. key is in seconds key value is for transparency -->
+        <ScalarInterpolator DEF="TransparencyAnimator" key="0 .2 .4 .6 .8 1"
+            keyValue=".25 .5 .75 .5 .25 .25"/>
+        <!-- To measure the passing of time it looks for 5 keys and repeats -->
+        <TimeSensor DEF="AnimationClock" cycleInterval="5" loop="true"/>
+        <ROUTE fromNode="AnimationClock" fromField="fraction_changed" toNode="TransparencyAnimator"
+            toField="set_fraction"/>
+        <!-- these link the interpolator to individual shapes -->
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="item171"
+            toField="transparency"/>
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="hairBraid"
+            toField="transparency"/>
+
+        <ROUTE fromNode="TransparencyAnimator" fromField="value_changed" toNode="Item172"
+            toField="transparency"/>
+
+    </Scene>
+</X3D>
