@@ -1,0 +1,82 @@
+#testing {
+    height:50%;
+    width:50%;
+    
+}
+
+#x3dcontext{
+    width:100%;
+    height:100%;
+    border:none;
+    display:block;
+    position:relative;
+
+}
+
+#overlay{
+    position:absolute;
+    left:18.5%;
+    right:18.5%;
+    background-color:black;
+    top:2.5%;
+    opacity:.8;
+    min-height:50%;
+}
+
+#closeOverlay{
+    position:absolute;
+    right:0px;
+    height:2vw;
+}
+
+
+p{
+    font-size:1.5vw;
+    margin-right:3%;
+    margin-left:3%;
+    color:white;
+}
+
+#inputShape p {
+    font-size:1vw;
+    color:black;
+}
+
+#pano{
+    position:relative;
+}
+
+
+#mainNav input{
+    border-style:solid;
+}
+
+
+html{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+}
+body{
+    margin:0;
+    
+    width:100%;
+    height:100%;
+}
+button{
+    height:3vw;
+    width:3vw;
+    float:left;
+    padding:0;
+    margin:0;
+}
+button img{
+    width:80%;
+}
+
+#butCont{
+    margin-left:25%;
+    position:absolute;
+    bottom:0;
+}
