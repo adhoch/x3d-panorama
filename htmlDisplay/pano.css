@@ -1,0 +1,89 @@
+#testing {
+    height:50%;
+    width:90%;
+    margin-left:5%;
+}
+
+#x3dcontext{
+    width:100%;
+    height:600px;
+    border:none;
+    display:block;
+    position:relative;
+
+}
+
+#overlay{
+    position:absolute;
+    left:18.5%;
+    right:18.5%;
+    background-color:black;
+    top:2.5%;
+    opacity:.8;
+    min-height:75%;
+}
+
+#closeOverlay{
+    position:absolute;
+    right:0px;
+    height:2vw;
+}
+
+
+p{
+    font-size:1.5vw;
+    margin-right:3%;
+    margin-left:3%;
+    color:white;
+}
+
+#inputShape p {
+    font-size:1vw;
+    color:black;
+}
+
+#pano{
+    position:relative;
+    min-height:75%;
+}
+
+
+#mainNav input{
+    border-style:solid;
+}
+
+
+html{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+}
+body{
+    margin:0;
+    
+    width:100%;
+    height:100%;
+}
+button{
+    height:3vw;
+    width:3vw;
+    float:left;
+    padding:0;
+    margin:0;
+}
+button img{
+    width:80%;
+}
+
+#butCont{
+    margin-left:25%;
+    position:absolute;
+    bottom:0;
+}
+
+#overlayContent img {max-width:50%;
+float:left;
+padding-right:5%;}
+
+#overlayContent span {display:block;}

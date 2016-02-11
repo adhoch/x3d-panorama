@@ -3,47 +3,307 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>x3d Panorama</title>
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script type="text/javascript" src="http://www.x3dom.org/download/x3dom.js"> </script>
-        <link rel="stylesheet" type="text/css" href="http://www.x3dom.org/download/x3dom.css" />
-        
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../Grunwald/x3dom.js"> </script>
+        <link rel="stylesheet" type="text/css" href="../Grunwald/x3dom.css" />
         <script type="text/javascript" src="pano.js"> </script>
-        <link href="pano.css"/>
-        </head>
-    <body>
+        <link rel="stylesheet" type="text/css" href="pano.css" />
+
+
+    </head>
+    <body id="body">
         <div id="pano">
-            <x3d id="x3dcontext" style="width:100%; height:5%;">
-                <scene>
-                    <!-- Need viewpoint and navigationWindow in main page for zoom function to work -->
-                    <viewpoint description="start" position="0 0 0" orientation="0 1 0 90"></viewpoint>
-                    <navigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0"
-                    ></navigationInfo>
-                    <!-- This gets the xyz coordinates of a click. Used to create clickable items by putting a semitransparent shape over them -->
-                    <Group
-                        onclick="document.getElementById('bar').setAttribute('translation', event.hitPnt);">
-                        <!-- *** Main panoramic sphere ***-->
-                        <!-- Prints the xyz coordinates of clicks to the console -->
-                        <Shape onclick="console.log(event.hitPnt);">
-                            <Appearance>
-                                <!--THERE IS AN UPPER LIMIT ON THE PIXEL DIMENSIONS MOST BROWSERS WILL DISPLAY (not chrome). 4096x4096. 16,777,216-->
-                                <ImageTexture id="panosphere"
-                                    url="images/panorama.jpg"
-                                ></ImageTexture>
-                            </Appearance>
-                            <!-- hollow as view is from inside sphere -->
-                            <sphere solid="false" radius="7.5"></sphere>
-                        </Shape>
-                    </Group>
-                    <inline url="pano.x3d"> </inline>
-                </scene>
-            </x3d>
+            <div id="testing">
+                <x3d onclick="resizeCanvas();" profile="Full" id="x3dcontext"
+                    style="width:100%; height:100%;" showlog="true">
+                    <div id="butCont">
+                        <div id="navbuts">
+                            <!--
+                            Not working because of resizing issues with the canvas
+                            <button id="fullscreen" onclick="fullscreen(this);">Full
+                            Screen</button>-->> <!-- Arguments in all movement buttons are distance for each click -->
+                            <button type="button" onclick="zoom(-0.15);">
+                                <img src="../Grunwald/Images/zoom_in.gif" alt="zoom in" />
+                            </button>
+                            <button type="button" onclick="zoom(0.15)">
+                                <img src="../Grunwald/Images/zoom_out.gif" alt="zoom out" />
+                            </button>
+                            <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-u" type="button"
+                                value="&uarr;" onclick="up(0.15);">&uarr;</button>
+                            <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-d" type="button"
+                                value="&darr;" onclick="down(0.15);">&darr;</button>
+                            <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-l" type="button"
+                                value="&larr;" onclick="left(0.15);">&larr;</button>
+                            <button class="ui-btn ui-icon-refresh ui-btn-icon-arrow-r" type="button"
+                                value="&rarr;" onclick="right(0.15);">&rarr;</button>
+                        </div>
+                    </div>
+                    <Scene>
+                        <!-- xcamera used by buttons to control x rotation -->
+                        <Transform id="xcamera" center="0 0 8" rotation="0 1 0 1.5">
+                            <!-- ycamera used by buttons to control y rotation -->
+                            <Transform id="ycamera" center="0 0 8">
+                                <viewpoint id="start" description="start" position="0 0 8"
+                                ></viewpoint></Transform></Transform>
+                        <!-- headlight leaves shaded corners where walls meet -->
+                        <navigationInfo type="walk" avatarSize="0.25 7.5 0.75" speed="0"
+                            headlight="false"></navigationInfo>
+                        <PointLight id="point" on="TRUE" intensity="1" color="1.0 1.0 1.0"
+                            location="0 0 8 " radius="20.0000"> </PointLight> <Transform
+                            scale="8 8 8" id="sizer">
+                            <Group id="Cube">
+                                <Shape DEF="Wall" id="front">
+                                    <IndexedFaceSet DEF="wallFace" coordIndex="0 1 2 3 0 -1"
+                                        solid="false">
+                                        <Coordinate
+                                            point="1.001 1.001 0 1.001 -1.001 0 -1.001 -1.001 0 -1.001 1.001 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet>
+                                    <Appearance> <imageTexture
+                                            url="facultyShow/roomB/Grunwald-20160120-b-big_f.jpg"
+                                        ></imageTexture>
+                                    </Appearance>
+                                </Shape>
+                                <Transform id="back" translation="0 0 2" rotation="0 0 0 0">
+                                    <Shape>
+                                        <IndexedFaceSet USE="wallFace"></IndexedFaceSet>
+                                        <Appearance>
+                                            <imageTexture
+                                                url="facultyShow/roomB/Grunwald-20160120-b-big_b.jpg"
+                                            ></imageTexture> </Appearance>
+                                    </Shape>
+                                </Transform>
+                                <Transform id="left" translation="-1 0 1" rotation="0 1 0 1.57">
+                                    <Shape>
+                                        <IndexedFaceSet USE="wallFace"></IndexedFaceSet>
+                                        <Appearance>
+                                            <imageTexture
+                                                url="facultyShow/roomB/Grunwald-20160120-b-big_l.jpg"
+                                            ></imageTexture> </Appearance>
+                                    </Shape>
+                                </Transform> <Transform id="right" translation="1 0 1"
+                                    rotation="0 1 0 1.57">
+                                    <Shape>
+                                        <IndexedFaceSet USE="wallFace"></IndexedFaceSet>
+                                        <Appearance>
+                                            <imageTexture
+                                                url="facultyShow/roomB/Grunwald-20160120-b-big_r.jpg"
+                                            ></imageTexture> </Appearance>
+                                    </Shape>
+                                </Transform> <Transform id="up" translation="0 1 1"
+                                    rotation="1 0 0 1.57">
+                                    <Shape>
+                                        <IndexedFaceSet USE="wallFace"></IndexedFaceSet>
+                                        <Appearance>
+                                            <imageTexture
+                                                url="facultyShow/roomB/Grunwald-20160120-b-big_u.jpg"
+                                            ></imageTexture> </Appearance>
+                                    </Shape>
+                                </Transform> <Transform id="down" translation="0 -1 1"
+                                    rotation="1 0 0 1.57">
+                                    <Shape>
+                                        <IndexedFaceSet USE="wallFace"></IndexedFaceSet>
+                                        <Appearance>
+                                            <imageTexture
+                                                url="facultyShow/roomB/Grunwald-20160120-b-big_d.jpg"
+                                            ></imageTexture> </Appearance>
+                                    </Shape>
+                                </Transform>
+                            </Group> </Transform>
+                        <Group id="B-click" render="true"> <Transform id="b-skyscraper"
+                                translation="7.99 -.37 12.5" rotation="0 1 0 1.57"
+                                onclick="displayItem('DSC_0112.jpg');">
+                                <Shape>
+                                    <Appearance DEF="infoApp">
+                                        <ImageTexture url="info.png"></ImageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet DEF="infoInd" coordIndex="0 1 2 3 0 -1"
+                                        solid="false">
+                                        <Coordinate point=".1 .1 0 .1 -.1 0 -.1 -.1 0 -.1 .1 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet>
+                                </Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0115.jpg");' id="b-kimono1"
+                                translation="-.4 .9 15.99">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0115.jpg");' id="b-kimono2"
+                                translation="-5.1 1.1 15.99">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0038.jpg");' id="b-deer"
+                                translation="-7.9 -.9 7.5" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick="toRoomA();" id="b-w-a" translation="-7.9 -3 4.4"
+                                rotation="0 1 0 1.57" scale="1 1 1">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet> </Shape>
+                            </Transform>
+                            <Transform id="b-w-c" onclick="toRoomC();" translation="-7.9 -2.3 13"
+                                rotation="0 1 0 -1.57">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet></Shape>
+                            </Transform> </Group>
+                        <Group id="A-click" render="false">
+                            <Transform onclick='displayItem("DSC_0109.jpg");' id="a-ginsburg"
+                                translation="-8 -.15 12.9" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0038.jpg");' id="a-deer"
+                                translation="-8 -1.8 10.6" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0112.jpg");' id="a-skyscraper"
+                                translation="-7.9 -.1 6.4" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0115.jpg");' id="a-kimono"
+                                translation="-7.9 .1 .19" rotation="0 1 0 1.57" scale="1.5 1.5 1.5">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0106.jpg");' id="a-lamp"
+                                translation="-2.1 .7 15.9" scale="1.2 1.2 1.2">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform> <Transform onclick="toRoomC();" id="a-w-c"
+                                translation="-1.7 -2.5 0.1">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet></Shape>
+                            </Transform> <Transform onclick="toRoomA();" id="a-w-b"
+                                translation="-7.3 -2 5.9" scale="1.25 1 1">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet></Shape>
+                            </Transform>
+                        </Group>
+                        <Group id="C-click" render="false">
+                            <Transform onclick="toRoomA();" id="c-w-a" translation="-7.5 -2.4 9.8"
+                                scale="1.25 1 1" rotation="0 1 0 -1.57">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet></Shape>
+                            </Transform> <Transform onclick="toRoomD();" id="c-w-d"
+                                translation="6 -2.4 15.9" scale="1.25 1 1" rotation="0 0 1 -1">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet></Shape>
+                            </Transform>
+                        </Group>
+                        <Group id="D-click" render="false">
+                            <Transform onclick='displayItem("DSC_0135.jpg");' id="d-pink"
+                                translation="-7.9 .83 2.2" rotation="0 1 0 1.57" scale="1.5 1.5 1">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0132.jpg");' id="d-walk"
+                                translation="-7.9 -.54 4.6" rotation="0 1 0 1.57" scale="1.5 1.5 1">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0126.jpg");' id="d-city"
+                                translation="-7.8 -.28 8.95" rotation="0 1 0 1.57" scale="1.5 1.5 1">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0120.jpg");' id="d-woman"
+                                translation="1.5 -.3 15.9" scale="1.5 1.5 1">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0153.jpg");' id="d-cheetos"
+                                translation="7.9 -.6 8.4" scale="1.5 1.5 1" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0145.jpg");' id="d-bugs"
+                                translation="7.9 -.36 2.1" scale="1.5 1.5 1" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0134.jpg");' id="d-backRoom"
+                                translation="-7.9 .69 4" scale="1.5 1.5 1" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick='displayItem("DSC_0212.jpg");' id="d-duck"
+                                translation="7.89 -.56 12.7" scale="1.5 1.5 1" rotation="0 1 0 1.57">
+                                <Shape>
+                                    <Appearance USE="infoApp"></Appearance><IndexedFaceSet
+                                        USE="infoInd"></IndexedFaceSet></Shape>
+                            </Transform>
+                            <Transform onclick="toRoomC();" id="d-w-c" translation="7.6 -1.5 11.8"
+                                scale=".75 .75 .75">
+                                <Shape>
+                                    <Appearance>
+                                        <imageTexture url="feet.png"></imageTexture>
+                                    </Appearance>
+                                    <IndexedFaceSet coordIndex="0 1 2 3 0 -1" solid="false">
+                                        <Coordinate point=".5 .5 0 .5 -.5 0 -.5 -.5 0 -.5 .5 0"
+                                        ></Coordinate>
+                                    </IndexedFaceSet></Shape>
+                            </Transform>
+                        </Group>
+                    </Scene> </x3d></div>
             <!-- zoom in and zoom out buttons as well as overlay -->
             <div id="mainNav">
-                <input type="image" onclick="zoom(-0.15);"
-                    src="https://upload.wikimedia.org/wikipedia/commons/c/c1/GeoGebra_icon_cursor_zoom_in.gif" />
-                <input type="image" onclick="zoom(0.15)"
-                    src="https://upload.wikimedia.org/wikipedia/commons/8/83/GeoGebra_icon_cursor_zoom_out.gif"
-                 />
+                <div id="inputShape"></div>
             </div>
             <!-- item click overlay. Each item in the x3d needs to identify it's item # by having the attribute "onclick='overlay(ITEM#);'" -->
             <div id="overlay" style="display:none;">
@@ -63,5 +323,28 @@
                     vitae diam vel fermentum. </p>
             </div>
         </div>
+        <script type="text/javascript">
+            window.onload=function(){
+console.log('test');
+var desiredWidthInCSSPixels = $('#x3dcontext').width();
+var desiredHeightInCSSPixels = 600;
+console.log('var'+desiredWidthInCSSPixels);
+console.log($('#x3dcontext').width());
+var canvas = document.getElementById("x3dom-x3dcontext-canvas");
+
+// set the display size of the canvas.
+canvas.style.width = desiredWidthInCSSPixels + "px";
+canvas.style.height = desiredHeightInCSSPixels + "px";
+
+// set the size of the drawingBuffer
+var devicePixelRatio = window.devicePixelRatio || 1;
+canvas.width = desiredWidthInCSSPixels+500;
+canvas.height = desiredHeightInCSSPixels;
+canvas.width = desiredWidthInCSSPixels;
+var gl = canvas.getContext("webgl");
+canvas.width = desiredWidthInCSSPixels;
+$('#x3dom-x3dcontext-canvas').attr('width', $('#x3dcontext').width());
+};
+        </script>
     </body>
 </html>
